@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.board.mapper.BoardMapper">
+
+    <!--  게시글 목록 가져오기  -->
+    <select id="selectAll" resultType="BoardListDTO">
+        SELECT *
+        FROM (
+                 SELECT ROWNUM AS RN, BOARD.*
+                 FROM (
+                          SELECT
+                              B.BOARD_ID,
+                              B.BOARD_TITLE,
+                              U.NAME,
+                              B.BOARD_VIEWS,
+                              B.BOARD_REGISTER_DATE,
+                              B.BOARD_UPDATE_DATE,
+                              U.PROVIDER_ID,
+                              (SELECT COUNT(*) FROM TBL_FILE F WHERE F.BOARD_ID = B.BOARD_ID) AS FILE_COUNT
+                          FROM
+                              TBL_BOARD B JOIN TBL_USERS U
+                                               ON
+                                                   U.PROVIDER_ID = B.PROVIDER_ID
+                          ORDER BY
+                              B.BOARD_UPDATE_DATE DESC
+                      ) BOARD
+                 WHERE ROWNUM &lt;= #{endRow}
+             )
+        WHERE rn &gt; #{startRow}
+    </select>
+    <!--  총 게시글의 갯수  -->
+    <select id="countBoard">
+        select count(*)
+        from tbl_board
+    </select>
+
+    <!--  다음 시퀀스를 가져오는 쿼리문  -->
+    <!--  board insert 시 사용할 예정  -->
+    <select id="getSeq" resultType="long">
+        select SEQ_BOARD.nextval from dual
+    </select>
+
+    <!-- 게시글 작성 쿼리문 -->
+    <insert id="saveBoard">
+        insert into TBL_BOARD
+        values(#{boardId}, #{boardTitle}, #{boardContent}, 0, sysdate, sysdate, #{providerId})
+    </insert>
+
+    <!--  게시글 상세보기  -->
+    <select id="selectBoardDetail" resultType="BoardDetailDTO">
+        SELECT
+            B.BOARD_ID,
+            B.BOARD_TITLE,
+            B.BOARD_CONTENT,
+            U.NAME,
+            B.BOARD_VIEWS,
+            B.BOARD_REGISTER_DATE,
+            B.BOARD_UPDATE_DATE,
+            U.PROVIDER_ID,
+            (SELECT COUNT(*) FROM TBL_FILE F WHERE F.BOARD_ID = B.BOARD_ID) AS FILE_COUNT
+        FROM
+            TBL_BOARD B JOIN TBL_USERS U ON U.PROVIDER_ID = B.PROVIDER_ID
+        where b.BOARD_ID = #{boardId}
+    </select>
+
+    <!--  조회 수 +1  -->
+    <update id="plusView">
+        update tbl_board
+        set board_views = board_views + 1
+        where BOARD_ID = #{boardId}
+    </update>
+
+    <!--  게시글 수정하기  -->
+    <update id="updateBoard">
+        update tbl_board
+        set BOARD_TITLE = #{boardTitle},
+            BOARD_CONTENT = #{boardContent},
+            BOARD_UPDATE_DATE = sysdate
+        where BOARD_ID = #{boardId}
+    </update>
+
+    <!--  게시글 삭제하기  -->
+    <delete id="deleteBoard">
+        delete from TBL_BOARD
+        where BOARD_ID = #{boardId}
+    </delete>
+
+
+
+
+
+    <!--  검색과 정렬을 페이지 이동 없이 하는 쿼리문들  -->
+    <!--  게시글 오래된 순  -->
+    <select id="selectAllByDateASC" resultType="BoardListDTO">
+        SELECT *
+        FROM (
+                 SELECT ROWNUM AS RN, BOARD.*
+                 FROM (
+                          SELECT
+                              B.BOARD_ID,
+                              B.BOARD_TITLE,
+                              U.NAME,
+                              B.BOARD_VIEWS,
+                              B.BOARD_REGISTER_DATE,
+                              B.BOARD_UPDATE_DATE,
+                              U.PROVIDER_ID,
+                              (SELECT COUNT(*) FROM TBL_FILE F WHERE F.BOARD_ID = B.BOARD_ID) AS FILE_COUNT
+                          FROM
+                              TBL_BOARD B JOIN TBL_USERS U
+                                               ON
+                                                   U.PROVIDER_ID = B.PROVIDER_ID
+                          ORDER BY
+                              B.BOARD_UPDATE_DATE ASC
+                      ) BOARD
+                 WHERE ROWNUM &lt;= #{endRow}
+             )
+        WHERE rn &gt; #{startRow}
+    </select>
+
+    <!--  게시글 조회 순  -->
+    <select id="selectAllByViews" resultType="BoardListDTO">
+        SELECT *
+        FROM (
+                 SELECT ROWNUM AS RN, BOARD.*
+                 FROM (
+                          SELECT
+                              B.BOARD_ID,
+                              B.BOARD_TITLE,
+                              U.NAME,
+                              B.BOARD_VIEWS,
+                              B.BOARD_REGISTER_DATE,
+                              B.BOARD_UPDATE_DATE,
+                              U.PROVIDER_ID,
+                              (SELECT COUNT(*) FROM TBL_FILE F WHERE F.BOARD_ID = B.BOARD_ID) AS FILE_COUNT
+                          FROM
+                              TBL_BOARD B JOIN TBL_USERS U
+                                               ON
+                                                   U.PROVIDER_ID = B.PROVIDER_ID
+                          ORDER BY
+                              B.BOARD_VIEWS DESC
+                      ) BOARD
+                 WHERE ROWNUM &lt;= #{endRow}
+             )
+        WHERE rn &gt; #{startRow}
+    </select>
+
+    <!-- 동적 쿼리 -->
+    <select id="selectD" resultType="BoardListDTO">
+        SELECT *
+        FROM (
+        SELECT ROWNUM AS RN, BOARD.*
+        FROM (
+        SELECT
+        B.BOARD_ID,
+        B.BOARD_TITLE,
+        U.NAME,
+        B.BOARD_VIEWS,
+        B.BOARD_REGISTER_DATE,
+        B.BOARD_UPDATE_DATE,
+        U.PROVIDER_ID,
+        (SELECT COUNT(*) FROM TBL_FILE F WHERE F.BOARD_ID = B.BOARD_ID) AS FILE_COUNT
+        FROM
+        TBL_BOARD B JOIN TBL_USERS U
+        ON
+        U.PROVIDER_ID = B.PROVIDER_ID
+        <where>
+            <if test="search != null">
+                <choose>
+                    <when test="searchType == 'title'">B.BOARD_TITLE LIKE '%' || #{search} || '%'</when>
+                    <when test="searchType == 'content'">B.BOARD_CONTENT LIKE '%' || #{search} || '%'</when>
+                </choose>
+            </if>
+        </where>
+        ORDER BY
+        <choose>
+            <when test="sort == 'views'">B.BOARD_VIEWS DESC</when>
+            <when test="sort == 'oldest'">B.BOARD_UPDATE_DATE ASC</when>
+            <otherwise>B.BOARD_UPDATE_DATE DESC</otherwise>
+        </choose>
+        ) BOARD
+        WHERE ROWNUM &lt;= #{endRow}
+        )
+        WHERE rn &gt; #{startRow}
+    </select>
+
+    <!--  총 게시글의 갯수 검색어까지 포함. -->
+    <select id="countDBoard">
+        select count(*)
+        from tbl_board
+        <where>
+            <if test="search != null">
+                <choose>
+                    <when test="searchType == 'title'">BOARD_TITLE LIKE '%' || #{search} || '%'</when>
+                    <when test="searchType == 'content'">BOARD_CONTENT LIKE '%' || #{search} || '%'</when>
+                </choose>
+            </if>
+        </where>
+    </select>
+
+</mapper>
+

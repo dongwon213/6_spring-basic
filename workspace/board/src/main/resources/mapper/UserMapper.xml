@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.board.mapper.UsersMapper">
+
+    <!-- 사용자 정보 조회 -->
+    <select id="findByProviderId">
+        select * from tbl_users
+        where provider_id = #{providerId}
+    </select>
+
+    <!--  사용자 정보 저장  -->
+    <insert id="saveUser">
+        insert into tbl_users (NAME, PROFILE_PIC, PROVIDER, PROVIDER_ID, CREATE_AT, UPDATE_AT, role)
+        values (#{name}, #{profilePic}, #{provider}, #{providerId}, sysdate, sysdate, #{role})
+    </insert>
+
+    <!--  사용자 정보 업데이트 -->
+    <update id="updateUser">
+        update tbl_users
+        set name = #{name}, profile_pic = #{profilePic}, update_at = sysdate
+        where provider_id = #{providerId}
+    </update>
+
+<!--  새로운 사람 회원 가입  -->
+    <update id="insertNewUser">
+        update tbl_users
+        set PHONE_NUMBER = #{phoneNumber}, ADDRESS = #{address}, ROLE = #{role}
+        where PROVIDER_ID = #{providerId}
+    </update>
+
+
+</mapper>
+
+
+<!--<?xml version="1.0" encoding="UTF-8"?>-->
+<!--<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">-->
+
+<!--<mapper namespace="com.example.board.mapper.UserMapper">-->
+
+<!--&lt;!&ndash;  사용자 정보 조회  &ndash;&gt;-->
+<!--<select id="findByProviderId">-->
+<!--    select * from tbl_users-->
+<!--    where provider_id = #{providerId}-->
+<!--</select>-->
+
+<!--&lt;!&ndash;  사용자 정보 저장  &ndash;&gt;-->
+<!--<insert id="saveUser">-->
+<!--    insert into tbl_users-->
+<!--    values (#{name}, #{profilePic}, #{provider}, #{providerId}, #{createAt}, #{updateAt})-->
+<!--</insert>-->
+<!--&lt;!&ndash;  사용자 정보 업데이트  &ndash;&gt;-->
+<!--<update id="updateUser">-->
+<!--    update tbl_users-->
+<!--    set name = #{name}, profile_pic = #{profilePic}, update_at = sysdate-->
+<!--    where provider_id = #{providerId}-->
+<!--</update>-->
+<!--</mapper>-->

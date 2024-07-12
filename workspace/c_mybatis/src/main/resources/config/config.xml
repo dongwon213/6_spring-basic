@@ -1,0 +1,17 @@
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+
+<!--  mapper.xml 파일 위치 등록  -->
+<!--    <mappers>-->
+<!--        <mapper resource="/mapper/Timemapper.xml" />-->
+<!--    </mappers>-->
+
+<!--  별칭을 등록할 수 있다  -->
+<!--    <typeAliases>-->
+<!--        <typeAlias type="com.example.c_mybatis.test.Test" alias="Test" />-->
+<!--    </typeAliases>-->
+
+</configuration>

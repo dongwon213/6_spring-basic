@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.product_final.mapper.ProductMapper">
+
+    <select id="selectTest" resultType="ProductVO">
+        select * from product
+    </select>
+
+    <!--   productList   -->
+    <select id="selectList" resultType="ProductDTO">
+        select id, name from product
+        order by id
+    </select>
+
+    <!--   detail   -->
+    <select id="selectOne" resultType="ProductDetailDTO">
+        select * from product
+        where id = #{id}
+    </select>
+
+    <!--    insert  -->
+    <insert id="insert" parameterType="ProductVO">
+        insert into product
+        values (seq_product.nextval, #{name}, #{price}, #{category}, #{description})
+    </insert>
+
+    <!--    update  -->
+    <update id="update">
+        update product
+        set
+            name = #{name},
+            price = #{price},
+            category = #{category},
+            description = #{description}
+        where id = #{id}
+    </update>
+
+    <!--    delete  -->
+    <delete id="delete">
+        delete from product
+        where id = #{id}
+    </delete>
+
+
+
+</mapper>
+
+<!--<?xml version="1.0" encoding="UTF-8"?>-->
+<!--<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">-->
+
+<!--<mapper namespace="com.example.product_final.mapper.ProductMapper">-->
+
+<!--    <select id="selectTest" resultType="ProductVO">-->
+<!--        select * from product-->
+<!--    </select>-->
+
+<!--    &lt;!&ndash;   productList   &ndash;&gt;-->
+<!--    <select id="selectList" resultType="ProductDTO">-->
+<!--        select id, name from product-->
+<!--        order by id-->
+<!--    </select>-->
+
+<!--    &lt;!&ndash;   detail   &ndash;&gt;-->
+<!--    <select id="selectOne" resultType="ProductDetailDTO">-->
+<!--        select * from product-->
+<!--        where id = #{id}-->
+<!--    </select>-->
+
+<!--    &lt;!&ndash;    insert  &ndash;&gt;-->
+<!--    <insert id="insert" parameterType="ProductVO">-->
+<!--        insert into product (id, name, price, category, description)-->
+<!--        values (seq_product.nextval, #{name}, #{price}, #{category}, #{description})-->
+<!--    </insert>-->
+
+<!--    &lt;!&ndash;    update  &ndash;&gt;-->
+<!--    <update id="update">-->
+<!--        update product-->
+<!--        set-->
+<!--            name = #{name},-->
+<!--            price = #{price},-->
+<!--            category = #{category},-->
+<!--            description = #{description}-->
+<!--        where id = #{id}-->
+<!--    </update>-->
+
+<!--    &lt;!&ndash;    delete  &ndash;&gt;-->
+<!--    <delete id="delete">-->
+<!--        delete from product-->
+<!--        where id = #{id}-->
+<!--    </delete>-->
+
+<!--</mapper>-->
+
+<!--&lt;!&ndash;<?xml version="1.0" encoding="UTF-8"?>&ndash;&gt;-->
+<!--&lt;!&ndash;<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">&ndash;&gt;-->
+
+<!--&lt;!&ndash;<mapper namespace="com.example.product_final.mapper.ProductMapper">&ndash;&gt;-->
+
+<!--&lt;!&ndash;    <select id="selectTest" resultType="ProductVO">&ndash;&gt;-->
+<!--&lt;!&ndash;        select * from product&ndash;&gt;-->
+<!--&lt;!&ndash;    </select>&ndash;&gt;-->
+
+<!--&lt;!&ndash;    &lt;!&ndash;   productList   &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;    <select id="selectList" resultType="ProductDTO">&ndash;&gt;-->
+<!--&lt;!&ndash;        select id, name from product&ndash;&gt;-->
+<!--&lt;!&ndash;        order by id&ndash;&gt;-->
+<!--&lt;!&ndash;    </select>&ndash;&gt;-->
+
+<!--&lt;!&ndash;    &lt;!&ndash;   detail   &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;    <select id="selectOne" resultType="ProductDetailDTO">&ndash;&gt;-->
+<!--&lt;!&ndash;        select * from product&ndash;&gt;-->
+<!--&lt;!&ndash;        where id = #{id}&ndash;&gt;-->
+<!--&lt;!&ndash;    </select>&ndash;&gt;-->
+
+<!--&lt;!&ndash;    &lt;!&ndash;    insert  &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;    <insert id="insert" parameterType="ProductVO">&ndash;&gt;-->
+<!--&lt;!&ndash;        insert into product&ndash;&gt;-->
+<!--&lt;!&ndash;        values (seq_product.nextval, #{name}, #{price}, #{category}, #{description})&ndash;&gt;-->
+<!--&lt;!&ndash;    </insert>&ndash;&gt;-->
+
+<!--&lt;!&ndash;    &lt;!&ndash;    update  &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;    <update id="update">&ndash;&gt;-->
+<!--&lt;!&ndash;        update product&ndash;&gt;-->
+<!--&lt;!&ndash;        set&ndash;&gt;-->
+<!--&lt;!&ndash;            name = #{name},&ndash;&gt;-->
+<!--&lt;!&ndash;            price = #{price},&ndash;&gt;-->
+<!--&lt;!&ndash;            category = #{category},&ndash;&gt;-->
+<!--&lt;!&ndash;            description = #{description}&ndash;&gt;-->
+<!--&lt;!&ndash;        where id = #{id}&ndash;&gt;-->
+<!--&lt;!&ndash;    </update>&ndash;&gt;-->
+
+<!--&lt;!&ndash;    &lt;!&ndash;  update  &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;    <update id="update">&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;        update product&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;        set&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;            name = #{name},&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;            price = #{price},&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;            category = #{category},&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;            description = ${description}&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;        where id = #{id}&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;    </update>&ndash;&gt;&ndash;&gt;-->
+
+
+<!--&lt;!&ndash;&lt;!&ndash;    <select id="selectTest" resultType="ProductVO">&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;        select * from product&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;    </select>&ndash;&gt;&ndash;&gt;-->
+
+<!--&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;  productList  &ndash;&gt;&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;    <select id="selectList" resultType="ProductDTO">&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;        select id, name from product&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;        order by id&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;    </select>&ndash;&gt;&ndash;&gt;-->
+
+<!--&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;  detail  &ndash;&gt;&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;    <select id="selectOne" resultType="ProductDetailDTO">&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;        select * from product&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;        where id = #{id}&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;    </select>&ndash;&gt;&ndash;&gt;-->
+
+<!--&lt;!&ndash;</mapper>&ndash;&gt;-->
+
