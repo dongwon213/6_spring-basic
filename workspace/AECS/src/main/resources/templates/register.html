@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>차량 등록 - EV Charging System</title>
+    <link rel="stylesheet" th:href="@{/css/register.css}">
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}">
+</head>
+<body>
+<div class="container">
+    <a th:href="@{/home}">
+        <header class="header">
+            <h1>EV Charging System</h1>
+        </header>
+    </a>
+
+    <div th:replace="~{/layout/sidebar :: sidebar}"></div>
+
+    <div class="main-content">
+        <section id="register">
+            <h2>차량 등록</h2>
+            <form th:action="@{/mypage/register}" th:object="${carDTO}" method="POST" enctype="multipart/form-data">
+                <label for="carImage">차량 사진:</label>
+                <input type="file" id="carImage" name="carImage" accept="image/*" required>
+
+                <label for="carNumber">차량 번호:</label>
+                <input type="text" id="carNumber" th:field="*{carNumber}" required>
+
+                <label for="carName">차 이름:</label>
+                <input type="text" id="carName" th:field="*{carName}" required>
+
+                <label for="carModel">차 모델:</label>
+                <input type="text" id="carModel" th:field="*{carModel}" required>
+
+                <label for="carBattery">배터리:</label>
+                <input type="text" id="carBattery" th:field="*{currentBattery}" required>
+
+                <label for="chargingType">충전 타입:</label>
+                <select id="chargingType" th:field="*{carChargingType}" required>
+                    <option value="type1">Type 1</option>
+                    <option value="type2">Type 2</option>
+                    <option value="ccs1">CCS1</option>
+                    <option value="ccs2">CCS2</option>
+                    <option value="chademo">CHAdeMO</option>
+                    <option value="tesla">Tesla Supercharger</option>
+                </select>
+
+                <label for="insurer">보험사ID:</label>
+                <select id="insurer" th:field="*{insurerId}" required>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                </select>
+
+                <input type="hidden" th:field="*{providerId}"> <!-- providerId 히든 필드 추가 -->
+
+                <button type="submit">등록</button>
+            </form>
+        </section>
+    </div>
+</div>
+<footer class="footer">
+    <p>© 2024 EV Charging System. All rights reserved.</p>
+</footer>
+<script src="/js/sidebar.js"></script>
+</body>
+</html>

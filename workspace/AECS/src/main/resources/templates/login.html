@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로그인 - EV Charging System</title>
+    <link rel="stylesheet" th:href="@{/css/style_login_join.css}">
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}">
+
+</head>
+<body>
+    <div class="container">
+        <a href="home.html">
+            <header class="header">
+                <h1>EV Charging System</h1>
+            </header>
+        </a>
+
+        <div th:replace="~{/layout/sidebar :: sidebar}"></div>
+
+        <div class="main-content">
+            <section id="login">
+                <h2>로그인</h2>
+                <form action="/login" method="POST">
+                    <label for="username">아이디:</label>
+                    <input type="text" id="username" name="username" required>
+                    
+                    <label for="password">비밀번호:</label>
+                    <input type="password" id="password" name="password" required>
+                    
+                    <button type="submit">로그인</button>
+                </form>
+                <p>회원이 아니신가요? <a href="join.html">회원가입</a></p>
+            </section>
+        </div>
+    </div>
+    <footer class="footer">
+        <p>© 2024 EV Charging System. All rights reserved.</p>
+    </footer>
+
+</body>
+<script src="/js/sidebar.js"></script>
+
+</html>

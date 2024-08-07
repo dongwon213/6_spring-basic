@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.aecs.mapper.OwnerMapper">
+
+<!--  사용자 정보 조회  -->
+    <select id="findByProviderId">
+        select * from TBL_OWNER
+        where PROVIDER_ID = #{providerId}
+    </select>
+
+
+
+<!--  사용자 정보 저장  -->
+    <insert id="saveOwner">
+        insert into TBL_OWNER (PROVIDER_ID, PROVIDER, OWNER_NAME, OWNER_AGE, PROFILE_PIC, ROLE)
+        values (#{providerId}, #{provider}, #{name}, #{age}, #{profilePic}, #{role} )
+    </insert>
+
+<!--  사용자 정보 업데이트  -->
+    <update id="updateOwner">
+        update TBL_OWNER
+        set OWNER_NAME = #{name}, PROFILE_PIC = #{profilePic}
+        where PROVIDER_ID = #{providerId}
+    </update>
+
+
+<!--  추가 정보 입력  -->
+    <update id="insertNewOwner">
+        update TBL_OWNER
+        set OWNER_TYPE = #{ownerType},
+            OWNER_PHONE_NUMBER = #{phoneNumber},
+            OWNER_ADDRESS = #{address},
+            OWNER_LICENCE = #{licence},
+            ROLE = #{role}
+        where PROVIDER_ID = #{providerId}
+    </update>
+
+    <select id="selectOwner" resultType="OwnerDTO">
+        SELECT O.PROVIDER_ID ,
+               O.PROVIDER ,
+               O.OWNER_NAME,
+               O.OWNER_AGE ,
+               O.OWNER_LICENCE,
+               O.OWNER_PHONE_NUMBER,
+               O.OWNER_ADDRESS ,
+               O.OWNER_TYPE,
+               O.PROFILE_PIC,
+               O."ROLE"
+        FROM TBL_OWNER O;
+        WHERE O.PROVIDER_ID = #{providerId}
+    </select>
+
+
+
+</mapper>
+

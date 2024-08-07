@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EV Charging System - 게시글 상세</title>
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}">
+    <link rel="stylesheet" th:href="@{/css/board.css}">
+    <link rel="stylesheet" th:href="@{/css/detail.css}">
+</head>
+<body>
+
+<header class="header">
+    <h1>EV Charging System</h1>
+</header>
+
+<div class="container">
+    <div th:replace="~{/layout/sidebar :: sidebar}"></div>
+
+    <div class="main-content">
+        <div class="board-title">게시글 상세</div>
+
+        <div class="board-container">
+            <div class="action-buttons">
+                <a th:href="@{/inquiry/list}" class="btn btn-list">목록으로</a>
+                <div sec:authorize="isAuthenticated()">
+                    <input type="hidden" name="loginId" th:value="${#authentication.getPrincipal().getProviderId()}">
+                    <div th:if="${#authentication.getPrincipal().getProviderId() == inquiry.providerId}">
+                        <a th:href="@{/inquiry/edit/{inquiryId}(inquiryId=${inquiry.inquiryId})}" class="btn btn-edit">수정</a>
+                        <form th:action="@{/inquiry/delete/{inquiryId}(inquiryId=${inquiry.inquiryId})}" method="post" style="display:inline;">
+                            <button type="submit" class="btn btn-delete">삭제</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="detail-item">
+                <label>제목:</label>
+                <span th:text="${inquiry.inquiryTitle}"></span>
+            </div>
+            <div class="detail-item">
+                <label>사고 유형:</label>
+                <span th:text="${inquiry.accident}"></span>
+            </div>
+            <div class="detail-item">
+                <label>내용:</label>
+                <p th:utext="${inquiry.inquiryContent}"></p>
+            </div>
+            <div class="detail-item">
+                <label>첨부파일:</label>
+                <ul>
+                    <li th:each="file : ${files}">
+                        <a th:href="@{/files/download/{fileId}(fileId=${file.fileId})}" th:text="${file.originalFileName}"></a>
+                    </li>
+                </ul>
+            </div>
+            <div class="detail-item">
+                <label>작성자:</label>
+                <span th:text="${inquiry.providerName}"></span>
+            </div>
+            <div class="detail-item">
+                <label>작성일:</label>
+                <span th:text="${inquiry.inquiryRegisterDate}"></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="footer">
+    <p>© 2024 EV Charging System. All rights reserved.</p>
+</footer>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="/js/sidebar.js"></script>
+</body>
+</html>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EV Charging System</title>
+    <link rel="stylesheet" th:href="@{/css/style_home.css}">
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}">
+    <style>
+        #map {
+            width: 100%;
+            height: 100vh;
+        }
+        .info-container {
+            padding: 5px;
+            background: rgba(255, 255, 255, 0.9);
+            font-size: 13px;
+            white-space: nowrap;
+            box-sizing: border-box;
+            position: relative;
+            z-index: 0;
+        }
+        .price-window {
+            display: block;
+        }
+        .info-window {
+            display: none; /* 기본적으로 숨기기 */
+        }
+        .charge-button {
+            display: block;
+            margin: 10px auto 0 auto;
+            padding: 5px;
+            width: 80%;
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .charge-button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <a href="./home.html">
+        <header class="header">
+            <h1>EV Charging System</h1>
+        </header>
+    </a>
+
+    <div th:replace="~{/layout/sidebar :: sidebar}"></div>
+
+    <div class="main-content">
+        <div id="map"></div>
+    </div>
+</div>
+
+<footer class="footer">
+    <p>© 2024 EV Charging System. All rights reserved.</p>
+</footer>
+
+<script src="/js/sidebar.js"></script>
+<script type="text/javascript">
+    function initKakaoMap() {
+        var container = document.getElementById('map');
+        var options = {
+            center: new kakao.maps.LatLng(33.450701, 126.570667),
+            level: 3
+        };
+
+        var map = new kakao.maps.Map(container, options);
+
+        // AJAX 요청으로 충전소 데이터를 가져옴
+        fetch('/home/stations')
+            .then(response => response.json())
+            .then(chargingStations => {
+                console.log('chargingStations:', chargingStations); // 데이터가 제대로 불러오는지 확인
+                var activeInfoWindow = null; // 현재 열려있는 정보 창을 저장할 변수
+                var zIndexCounter = 1; // z-index를 위한 카운터
+
+                chargingStations.forEach(function(station) {
+                    if (!station.latitude || !station.longitude) {
+                        console.warn('Invalid station data:', station);
+                        return; // 위도 경도 정보가 없으면 무시
+                    }
+
+                    var markerPosition = new kakao.maps.LatLng(station.latitude, station.longitude);
+
+                    // 마커 이미지 설정
+                    var imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png', // 마커 이미지 URL
+                        imageSize = new kakao.maps.Size(24, 35), // 마커 이미지의 크기
+                        imageOption = {offset: new kakao.maps.Point(12, 35)}; // 마커 이미지의 옵션
+
+                    var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
+
+                    // 마커 생성
+                    var marker = new kakao.maps.Marker({
+                        position: markerPosition,
+                        image: markerImage // 마커 이미지 설정
+                    });
+
+                    marker.setMap(map);
+
+                    // 충전기 정보를 그룹화하여 중복 제거
+                    var chargerInfoMap = new Map();
+                    station.chargers.forEach(charger => {
+                        if (!chargerInfoMap.has(charger.chargerType)) {
+                            chargerInfoMap.set(charger.chargerType, {total: 0, available: 0, type: charger.carChargingType});
+                        }
+                        chargerInfoMap.get(charger.chargerType).total++;
+                        if (charger.chargerStatus === '사용 가능') {
+                            chargerInfoMap.get(charger.chargerType).available++;
+                        }
+                    });
+
+                    // 가격 정보와 상세 정보 표시할 인포윈도우
+                    var chargersInfo = '';
+                    chargerInfoMap.forEach((info, type) => {
+                        var chargingType = info.type === '급속' ? '급속' : '완속';
+                        chargersInfo += `<p>(${chargingType}) ${type} : ${info.available} / ${info.total}</p>`;
+                    });
+
+                    var infoContent = `<div class="info-container" style="z-index:${zIndexCounter}">
+                        <div class="price-window">${station.stationName}<br>급속: ${station.fastChargerPrice || 'undefined'}원 / 완속: ${station.slowChargerPrice || 'undefined'}원</div>
+                        <div class="info-window">
+                            ${chargersInfo}
+                            <a href="#" class="charge-button">충전하기</a>
+                        </div>
+                    </div>`;
+
+                    var infowindow = new kakao.maps.InfoWindow({
+                        content: infoContent,
+                        position: markerPosition,
+                        yAnchor: 1 // 인포윈도우의 위치를 위로 올림
+                    });
+
+                    infowindow.open(map, marker); // 가격 정보 항상 표시
+
+                    // 마커에 클릭 이벤트를 등록하여 상세 정보를 표시
+                    kakao.maps.event.addListener(marker, 'click', function() {
+                        var infoWindowContent = infowindow.getContent();
+                        var parser = new DOMParser();
+                        var infoWindowDiv = parser.parseFromString(infoWindowContent, 'text/html').body.firstChild;
+
+                        if (infoWindowDiv) {
+                            var infoWindow = infoWindowDiv.querySelector('.info-window');
+                            var infoContainer = infoWindowDiv.querySelector('.info-container');
+
+                            if (infoWindow) {
+                                if (infoWindow.style.display === 'none') {
+                                    infoWindow.style.display = 'block';
+                                    // z-index를 가장 높은 값으로 설정
+                                    if (infoContainer) {
+                                        infoContainer.style.zIndex = zIndexCounter++;
+                                    }
+                                } else {
+                                    infoWindow.style.display = 'none';
+                                }
+
+                                infowindow.setContent(infoWindowDiv.outerHTML);
+                            }
+                        }
+                    });
+                });
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    // Kakao Maps API를 비동기로 로드
+    function loadKakaoMapScript() {
+        var script = document.createElement('script');
+        script.src = "//dapi.kakao.com/v2/maps/sdk.js?appkey=19d09a30c5edc8b9c363a4d06eb596e6&autoload=false";
+        script.onload = function() {
+            kakao.maps.load(initKakaoMap);
+        };
+        document.head.appendChild(script);
+    }
+
+    window.onload = loadKakaoMapScript;
+</script>
+</body>
+</html>

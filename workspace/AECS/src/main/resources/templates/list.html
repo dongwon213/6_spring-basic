@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EV Charging System - 문의</title>
+    <link rel="stylesheet" th:href="@{/css/board.css}">
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}">
+</head>
+<body>
+
+<header class="header">
+    <h1>EV Charging System</h1>
+</header>
+
+<div class="container">
+    <div th:replace="~{/layout/sidebar :: sidebar}"></div>
+
+    <div class="main-content">
+        <div class="board-title">문의</div>
+
+        <div class="board-container">
+            <div sec:authorize="isAuthenticated()" class="write-button-container">
+                <a th:href="@{/inquiry/write}" class="btn-write">
+                    <button>글 작성</button>
+                </a>
+            </div>
+
+            <table class="board-table">
+                <thead>
+                <tr>
+                    <th class="number">번호</th>
+                    <th class="title">제목</th>
+                    <th class="writer">작성자</th>
+                    <th class="views">조회수</th>
+                    <th class="date">작성일</th>
+                </tr>
+                </thead>
+                <tbody id="boardList">
+                <tr th:each="inquiry, iterStat : ${boards}">
+                    <td th:text="${iterStat.index + 1}"></td>
+                    <td>
+                        <a th:href="@{/inquiry/detail/{inquiryId}(inquiryId=${inquiry.inquiryId})}"
+                           th:text="${inquiry.inquiryTitle} + (${inquiry.fileCount} > 0 ? ' [첨부파일: ' + ${inquiry.fileCount} + ']' : '')"></a>
+                    </td>
+                    <td th:text="${inquiry.ownerName}"></td>
+                    <td th:text="${inquiry.inquiryView}"></td>
+                    <td th:text="${inquiry.inquiryRegisterDate}"></td>
+                </tr>
+                </tbody>
+            </table>
+
+            <ul class="pagination">
+                <li th:classappend="${startPage == 1} ? 'disabled' : ''" class="page-item">
+                    <a class="page-link" th:href="@{/board/list(pageNo=${startPage - 1}, pageSize=${pageSize})}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+
+                <li th:each="i : ${#numbers.sequence(startPage, endPage)}" th:classappend="${currentPage == i} ? 'active' : ''" class="page-item">
+                    <a th:href="@{/board/list(pageNo=${i}, pageSize=${pageSize})}" class="page-link" th:text="${i}"></a>
+                </li>
+
+                <li th:classappend="${endPage == totalPages} ? 'disabled' : ''" class="page-item">
+                    <a class="page-link" th:href="@{/board/list(pageNo=${endPage + 1}, pageSize=${pageSize})}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<footer class="footer">
+    <p>© 2024 EV Charging System. All rights reserved.</p>
+</footer>
+
+</body>
+<script src="/js/sidebar.js"></script>
+</html>

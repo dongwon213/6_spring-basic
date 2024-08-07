@@ -1,0 +1,226 @@
+/* detail.css */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #f5f5f5;
+}
+
+.container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    flex-grow: 1;
+}
+
+.header {
+    width: 100%;
+    background-color: #ffffff;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    top: 0;
+    z-index: 1000;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 24px;
+    color: #333;
+}
+
+.sidebar {
+    height: 100%;
+    width: 60px;
+    background-color: #e8e8e8;
+    overflow-x: hidden;
+    padding-top: 60px;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 999;
+    border-right: 1px solid #ccc;
+    transition: width 0.3s;
+}
+
+.sidebar.expanded {
+    width: 400px;
+}
+
+.sidebar .toggle-button {
+    color: #000;
+    background: none;
+    border: none;
+    font-size: 24px;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.sidebar .sidebar-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.sidebar .auth-buttons {
+    display: none;
+    flex-direction: row;
+    justify-content: space-around;
+    width: 100%;
+    padding: 10px 0;
+}
+
+.sidebar.expanded .auth-buttons {
+    display: flex;
+}
+
+.sidebar .auth-button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    margin: 5px;
+}
+
+.sidebar .auth-button:hover {
+    background-color: #45a049;
+}
+
+.sidebar .nav-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.sidebar.expanded .nav-buttons {
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.sidebar .sidebar-item {
+    padding: 15px 0;
+    text-decoration: none;
+    font-size: 18px;
+    color: #333;
+    display: block;
+    transition: 0.3s;
+    text-align: center;
+}
+
+.sidebar .sidebar-item:hover {
+    color: #4CAF50;
+}
+
+.sidebar .convenience {
+    display: none;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px 0;
+}
+
+.sidebar.expanded .convenience {
+    display: flex;
+}
+
+.convenience a {
+    padding: 5px 0;
+    text-decoration: none;
+    font-size: 16px;
+    color: #333;
+    transition: 0.3s;
+    text-align: center;
+}
+
+.convenience a:hover {
+    color: #4CAF50;
+}
+
+.main-content {
+    margin-left: 60px;
+    padding: 80px 20px 20px 20px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    background-color: #ffffff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    min-height: calc(100vh - 60px);
+}
+
+.board-container {
+    width: 60%; /* 가로 3/5 영역 */
+    position: relative;
+}
+
+.board-title {
+    font-size: xx-large;
+    margin: 50px auto;
+}
+
+.detail-item {
+    margin-bottom: 20px;
+}
+
+.detail-item label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.detail-item span, .detail-item p {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.action-buttons .btn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    text-decoration: none;
+}
+
+.action-buttons .btn:hover {
+    background-color: #45a049;
+}
+
+.action-buttons .btn-delete {
+    background-color: #e74c3c;
+}
+
+.action-buttons .btn-delete:hover {
+    background-color: #c0392b;
+}
+
+.footer {
+    background-color: #f5f5f5;
+    text-align: center;
+    padding: 10px 20px;
+    position: relative;
+    width: 100%;
+    bottom: 0;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+}

@@ -119,3 +119,29 @@ from tbl_users u join TBL_COMMENT c
                           and BOARD_ID = 16
 order by COMMENT_UPDATE_DATE desc;
 
+CREATE SEQUENCE seq_notice
+    START WITH 1
+    INCREMENT BY 1
+    NOCACHE;
+
+CREATE SEQUENCE seq_banner
+    START WITH 1
+    INCREMENT BY 1
+    NOCACHE;
+
+CREATE TABLE TBL_Notice
+(
+    notice_id           NUMBER PRIMARY KEY,
+    notice_title        VARCHAR2(1000),
+    notice_content      VARCHAR2(1000),
+    notice_date         date
+);
+
+CREATE TABLE TBL_banner
+(
+    banner_id           NUMBER PRIMARY KEY,
+    banner_title        VARCHAR2(1000),
+    banner_img     VARCHAR2(1000),
+    banner_date         date
+);
+

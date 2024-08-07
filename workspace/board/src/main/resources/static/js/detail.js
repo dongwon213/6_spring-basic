@@ -236,30 +236,5 @@ function cancelEdit(){
 }
 
 
-// // 댓글 수정폼  생성 함수
-// function createEditForm(commentId, commentContent){
-//     return `
-//         <div class="mb-3">
-//             <textarea class="form-control comment-edit-content" rows="3">${currentContent}</textarea>
-//         </div>
-//         <button class="btn btn-primary" onClick="editComment(${commentId})">수정완료</button>
-//         <button class="btn btn-secondary" onClick="cancelEdit()">취소</button>
-//     `;
-// }
-//
-// // 수정 삭제 버튼 중 수정을 눌렀을 떄
-// function updateComment(commentId){
-//     // 기존 댓글 내용을 가지고 와서 수정 폼에 넣는다
-//     let comment = $(`#comment-${commentId}`).text();
-//     let content = comment.find('.comment-text').text()
-//     comment.find('.comment-body').html(createEditForm(commentId, content))
-//
-// }
-
-
-
-
-
-
 
 

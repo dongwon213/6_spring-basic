@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>충전하기 - EV Charging System</title>
+    <link rel="stylesheet" th:href="@{/css/map.css}">
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}">
+</head>
+<body>
+<div class="container">
+    <a href="./home.html">
+        <header class="header">
+            <h1>EV Charging System</h1>
+        </header>
+    </a>
+
+    <div th:replace="~{/layout/sidebar :: sidebar}"></div>
+
+    <div class="main-content">
+        <div id="map"></div>
+        <div class="search-container">
+            <section id="goCharging">
+                <h2>충전소 검색</h2>
+                <form id="stationForm">
+                    <input type="text" id="station" name="station" placeholder="충전소 이름 입력" required>
+                    <button type="submit">검색</button>
+                </form>
+            </section>
+
+            <section id="findArrive">
+                <h2>도착지</h2>
+                <form id="arrivalForm">
+                    <input type="text" id="arrival" name="arrival" placeholder="도착지 입력" required>
+                    <button type="submit">검색</button>
+                </form>
+            </section>
+
+            <button id="findRoute">경로 찾기</button>
+        </div>
+    </div>
+</div>
+<footer class="footer">
+    <p>© 2024 EV Charging System. All rights reserved.</p>
+</footer>
+
+<script src="/js/sidebar.js"></script>
+<script src="/js/map.js"></script>
+</body>
+</html>

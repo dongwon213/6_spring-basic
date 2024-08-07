@@ -48,4 +48,6 @@ public interface BoardMapper {
 
     // 동적 쿼리 시, 게시글 갯수
     int countDBoard(String searchType, String search);
+
+
 }

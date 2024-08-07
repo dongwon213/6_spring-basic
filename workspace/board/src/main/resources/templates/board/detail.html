@@ -177,6 +177,8 @@
       </div>
     </div>
 
+
+
     <div sec:authorize="isAuthenticated()">
       <input type="hidden" name="loginId" th:value="${#authentication.getPrincipal().getProviderId()}">
       <div style="text-align: right;" th:if="${#authentication.getPrincipal().getProviderId() == board.providerId}">

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.aecs.mapper.FileMapper">
+    <!--  첨부파일 추가  -->
+    <insert id="insertFile">
+        INSERT INTO TBL_FILES (file_id, inquiry_id, original_file_name, stored_file_name, file_size, upload_time)
+        VALUES (seq_file.nextval, #{inquiryId}, #{originalFileName}, #{storedFileName}, #{fileSize}, SYSDATE)
+    </insert>
+
+
+    <!--  게시글 번호로 첨부파일 가져오기  -->
+    <select id="selectFileList" resultType="FIleDTO">
+        select
+            FILE_ID,
+            INQUIRY_ID,
+            ORIGINAL_FILE_NAME,
+            FILE_SIZE,
+            UPLOAD_TIME,
+            INQUIRY_ID
+        from
+            tbl_files
+        where INQUIRY_ID = #{inquiryId}
+    </select>
+
+
+    <!--  게시판 번호로 펌부파일 삭제  -->
+    <delete id="deleteFile">
+        delete from TBL_FILES
+        where INQUIRY_ID = #{inquiryId}
+    </delete>
+
+    <!--  파일 ID를 이용해서 첨부파일 정보 가져오기  -->
+    <select id="getFileById" resultType="FileDTO">
+        select
+            FILE_ID,
+            ORIGINAL_FILE_NAME,
+            STORED_FILE_NAME,
+            FILE_SIZE,
+            UPLOAD_TIME,
+            INQUIRY_ID
+        from
+            tbl_file
+        where FILE_ID = #{fileId}
+
+    </select>
+
+
+
+</mapper>

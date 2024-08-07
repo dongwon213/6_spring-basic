@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.aecs.mapper.InquiryMapper">
+
+    <!-- 게시글 목록 가져오기 -->
+    <select id="selectAll" resultType="InquiryListDTO">
+        SELECT *
+        FROM (
+                 SELECT ROWNUM AS RN, INQUIRY.*
+                 FROM (
+                          SELECT
+                              I.INQUIRY_ID,
+                              I.INQUIRY_TITLE,
+                              O.OWNER_NAME,
+                              S.STATION_NAME,
+                              I.INQUIRY_VIEW,
+                              I.INQUIRY_REGISTER_DATE,
+                              I.INQUIRY_UPDATE_DATE,
+                              O.PROVIDER_ID,
+                              I.REQUEST_ID,
+                              R.STATION_ID,
+                              (SELECT COUNT(*) FROM TBL_FILES F WHERE F.INQUIRY_ID = I.INQUIRY_ID) AS FILE_COUNT
+                          FROM
+                              TBL_INQUIRY I
+                                  JOIN TBL_OWNER O ON O.PROVIDER_ID = I.PROVIDER_ID
+                                  JOIN TBL_CHARGING_REQUEST R ON R.REQUEST_ID = I.REQUEST_ID
+                                  LEFT JOIN TBL_CHARGING_STATION S ON S.STATION_ID = R.STATION_ID
+                          ORDER BY
+                              I.INQUIRY_UPDATE_DATE DESC
+                      ) INQUIRY
+                 WHERE ROWNUM &lt;= #{endRow}
+             )
+        WHERE rn &gt; #{startRow}
+    </select>
+
+    <!-- 총 게시글의 갯수 -->
+    <select id="countInquiry">
+        SELECT COUNT(*)
+        FROM TBL_INQUIRY
+    </select>
+
+    <!-- 다음 시퀀스를 가져오는 쿼리문 -->
+    <select id="getSeq" resultType="long">
+        SELECT SEQ_INQUIRY_ID.NEXTVAL FROM DUAL
+    </select>
+
+    <!-- 게시글 작성 쿼리문 -->
+    <insert id="saveInquiry">
+        INSERT INTO TBL_INQUIRY (INQUIRY_ID, INQUIRY_TITLE, INQUIRY_CONTENT, INQUIRY_VIEW, INQUIRY_REGISTER_DATE, INQUIRY_UPDATE_DATE, PROVIDER_ID, REQUEST_ID)
+        VALUES (#{inquiryId}, #{inquiryTitle}, #{inquiryContent}, 0, SYSDATE, SYSDATE, #{providerId}, #{requestId})
+    </insert>
+
+    <!-- 게시글 상세보기 -->
+    <select id="selectInquiryDetail" resultType="InquiryDetailDTO">
+        SELECT
+            I.INQUIRY_ID,
+            I.INQUIRY_TITLE,
+            I.INQUIRY_CONTENT,
+            O.OWNER_NAME AS PROVIDER_NAME,
+            S.STATION_NAME,
+            I.INQUIRY_VIEW,
+            TO_CHAR(I.INQUIRY_REGISTER_DATE, 'YYYY-MM-DD HH24:MI:SS') AS INQUIRY_REGISTER_DATE,
+            I.INQUIRY_UPDATE_DATE,
+            O.PROVIDER_ID,
+            I.REQUEST_ID,
+            R.STATION_ID,
+            I.ACCIDENT,
+            (SELECT COUNT(*) FROM TBL_FILES F WHERE F.INQUIRY_ID = I.INQUIRY_ID) AS FILE_COUNT
+        FROM
+            TBL_INQUIRY I
+                JOIN TBL_OWNER O ON O.PROVIDER_ID = I.PROVIDER_ID
+                JOIN TBL_CHARGING_REQUEST R ON R.REQUEST_ID = I.REQUEST_ID
+                LEFT JOIN TBL_CHARGING_STATION S ON S.STATION_ID = R.STATION_ID
+        WHERE I.INQUIRY_ID = #{inquiryId}
+    </select>
+
+    <!-- 조회 수 +1 -->
+    <update id="plusView">
+        UPDATE TBL_INQUIRY
+        SET INQUIRY_VIEW = INQUIRY_VIEW + 1
+        WHERE INQUIRY_ID = #{inquiryId}
+    </update>
+
+    <!-- 게시글 수정하기 -->
+    <update id="updateInquiry">
+        UPDATE TBL_INQUIRY
+        SET INQUIRY_TITLE = #{inquiryTitle},
+            INQUIRY_CONTENT = #{inquiryContent},
+            INQUIRY_UPDATE_DATE = SYSDATE,
+            REQUEST_ID = #{requestId}
+        WHERE INQUIRY_ID = #{inquiryId}
+    </update>
+
+    <!-- 게시글 삭제하기 -->
+    <delete id="deleteInquiry">
+        DELETE FROM TBL_INQUIRY
+        WHERE INQUIRY_ID = #{inquiryId}
+    </delete>
+
+    <!-- 검색과 정렬을 페이지 이동 없이 하는 쿼리문들 -->
+    <!-- 게시글 오래된 순 -->
+    <select id="selectAllByDateASC" resultType="InquiryDTO">
+        SELECT *
+        FROM (
+                 SELECT ROWNUM AS RN, INQUIRY.*
+                 FROM (
+                          SELECT
+                              I.INQUIRY_ID,
+                              I.INQUIRY_TITLE,
+                              O.OWNER_NAME AS PROVIDER_NAME,
+                              S.STATION_NAME,
+                              I.INQUIRY_VIEW,
+                              I.INQUIRY_REGISTER_DATE,
+                              I.INQUIRY_UPDATE_DATE,
+                              O.PROVIDER_ID,
+                              I.REQUEST_ID,
+                              R.STATION_ID,
+                              (SELECT COUNT(*) FROM TBL_FILES F WHERE F.INQUIRY_ID = I.INQUIRY_ID) AS FILE_COUNT
+                          FROM
+                              TBL_INQUIRY I
+                                  JOIN TBL_OWNER O ON O.PROVIDER_ID = I.PROVIDER_ID
+                                  JOIN TBL_CHARGING_REQUEST R ON R.REQUEST_ID = I.REQUEST_ID
+                                  LEFT JOIN TBL_CHARGING_STATION S ON S.STATION_ID = R.STATION_ID
+                          ORDER BY
+                              I.INQUIRY_UPDATE_DATE ASC
+                      ) INQUIRY
+                 WHERE ROWNUM &lt;= #{endRow}
+             )
+        WHERE rn &gt; #{startRow}
+    </select>
+
+    <!-- 게시글 조회 순 -->
+    <select id="selectAllByViews" resultType="InquiryDTO">
+        SELECT *
+        FROM (
+                 SELECT ROWNUM AS RN, INQUIRY.*
+                 FROM (
+                          SELECT
+                              I.INQUIRY_ID,
+                              I.INQUIRY_TITLE,
+                              O.OWNER_NAME AS PROVIDER_NAME,
+                              S.STATION_NAME,
+                              I.INQUIRY_VIEW,
+                              I.INQUIRY_REGISTER_DATE,
+                              I.INQUIRY_UPDATE_DATE,
+                              O.PROVIDER_ID,
+                              I.REQUEST_ID,
+                              R.STATION_ID,
+                              (SELECT COUNT(*) FROM TBL_FILES F WHERE F.INQUIRY_ID = I.INQUIRY_ID) AS FILE_COUNT
+                          FROM
+                              TBL_INQUIRY I
+                                  JOIN TBL_OWNER O ON O.PROVIDER_ID = I.PROVIDER_ID
+                                  JOIN TBL_CHARGING_REQUEST R ON R.REQUEST_ID = I.REQUEST_ID
+                                  LEFT JOIN TBL_CHARGING_STATION S ON S.STATION_ID = R.STATION_ID
+                          ORDER BY
+                              I.INQUIRY_VIEW DESC
+                      ) INQUIRY
+                 WHERE ROWNUM &lt;= #{endRow}
+             )
+        WHERE rn &gt; #{startRow}
+    </select>
+
+    <!-- 동적 쿼리 -->
+    <select id="selectD" resultType="InquiryDTO">
+        SELECT *
+        FROM (
+        SELECT ROWNUM AS RN, INQUIRY.*
+        FROM (
+        SELECT
+        I.INQUIRY_ID,
+        I.INQUIRY_TITLE,
+        O.OWNER_NAME AS PROVIDER_NAME,
+        S.STATION_NAME,
+        I.INQUIRY_VIEW,
+        I.INQUIRY_REGISTER_DATE,
+        I.INQUIRY_UPDATE_DATE,
+        O.PROVIDER_ID,
+        I.REQUEST_ID,
+        R.STATION_ID,
+        (SELECT COUNT(*) FROM TBL_FILES F WHERE F.INQUIRY_ID = I.INQUIRY_ID) AS FILE_COUNT
+        FROM
+        TBL_INQUIRY I
+        JOIN TBL_OWNER O ON O.PROVIDER_ID = I.PROVIDER_ID
+        JOIN TBL_CHARGING_REQUEST R ON R.REQUEST_ID = I.REQUEST_ID
+        LEFT JOIN TBL_CHARGING_STATION S ON S.STATION_ID = R.STATION_ID
+        <where>
+            <if test="search != null">
+                <choose>
+                    <when test="searchType == 'title'">I.INQUIRY_TITLE LIKE '%' || #{search} || '%'</when>
+                    <when test="searchType == 'content'">I.INQUIRY_CONTENT LIKE '%' || #{search} || '%'</when>
+                </choose>
+            </if>
+        </where>
+        ORDER BY
+        <choose>
+            <when test="sort == 'views'">I.INQUIRY_VIEW DESC</when>
+            <when test="sort == 'oldest'">I.INQUIRY_UPDATE_DATE ASC</when>
+            <otherwise>I.INQUIRY_UPDATE_DATE DESC</otherwise>
+        </choose>
+        ) INQUIRY
+        WHERE ROWNUM &lt;= #{endRow}
+        )
+        WHERE rn &gt; #{startRow}
+    </select>
+
+    <!-- 총 게시글의 갯수 -->
+    <select id="countDInquiry">
+        SELECT COUNT(*)
+        FROM TBL_INQUIRY
+        <where>
+            <if test="search != null">
+                <choose>
+                    <when test="searchType == 'title'">INQUIRY_TITLE LIKE '%' || #{search} || '%'</when>
+                    <when test="searchType == 'content'">INQUIRY_CONTENT LIKE '%' || #{search} || '%'</when>
+                </choose>
+            </if>
+        </where>
+    </select>
+
+<!--  requestId 존재 확인  -->
+    <select id="existsRequestId" resultType="boolean">
+        SELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END
+        FROM TBL_CHARGING_REQUEST
+        WHERE REQUEST_ID = #{requestId} AND PROVIDER_ID = #{providerId}
+    </select>
+
+
+
+</mapper>

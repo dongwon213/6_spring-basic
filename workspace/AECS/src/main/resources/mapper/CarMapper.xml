@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.aecs.mapper.CarMapper">
+
+    <!-- CarId 시퀀스 -->
+    <select id="getSeq" resultType="int">
+        SELECT SEQ_CAR_ID.NEXTVAL FROM DUAL
+    </select>
+
+    <!-- 차 등록 메소드 -->
+    <insert id="registerCar">
+        INSERT INTO TBL_CAR (CAR_ID, CAR_NUMBER, CAR_MODEL, CAR_CHARGING_TYPE, PROVIDER_ID, INSURER_ID,
+                             CURRENT_LATITUDE, CURRENT_LONGITUDE, CURRENT_BATTERY, CAR_NAME, CAR_IMAGE_FILE_NAME)
+        VALUES (#{carId}, #{carNumber}, #{carModel}, #{carChargingType}, #{providerId}, #{insurerId},
+                #{currentLatitude}, #{currentLongitude}, #{currentBattery}, #{carName}, #{carImageFileName})
+    </insert>
+
+    <!-- 마이페이지 차 보여주기 -->
+    <select id="findCarsByProviderId" resultType="com.example.aecs.domain.dto.CarDTO">
+        SELECT
+            car_id AS carId,
+            car_number AS carNumber,
+            car_name AS carName,
+            car_model AS carModel,
+            car_charging_type AS carChargingType,
+            provider_id AS providerId,
+            insurer_id AS insurerId,
+            current_latitude AS currentLatitude,
+            current_longitude AS currentLongitude,
+            current_battery AS currentBattery,
+            current_status AS currentStatus,
+            car_image_file_name AS carImageFileName
+        FROM TBL_CAR
+        WHERE PROVIDER_ID = #{providerId}
+    </select>
+
+    <!-- 차 위치 가져오기 -->
+    <select id="getCurrentLocationByCarId" resultType="com.example.aecs.domain.dto.CarLocationDTO">
+        SELECT CURRENT_LATITUDE as latitude, CURRENT_LONGITUDE as longitude
+        FROM TBL_CAR
+        WHERE CAR_ID = #{carId}
+    </select>
+
+    <!-- 이미지 경로 조회 메서드 -->
+    <select id="getCarImagePath" resultType="string">
+        SELECT car_image_file_name
+        FROM TBL_CAR
+        WHERE CAR_ID = #{carId}
+    </select>
+
+</mapper>

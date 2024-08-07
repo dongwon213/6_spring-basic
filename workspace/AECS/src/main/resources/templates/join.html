@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원가입 - EV Charging System</title>
+    <link rel="stylesheet" th:href="@{/css/style_login_join.css}">
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}">
+
+</head>
+<body>
+    <div class="container">
+        <a href="home.html">
+            <header class="header">
+                <h1>EV Charging System</h1>
+            </header>
+        </a>
+
+        <div th:replace="~{/layout/sidebar :: sidebar}"></div>
+
+        <div class="main-content">
+            <section id="register">
+                <h2>회원가입</h2>
+                <form th:action="@{/inquiry/join}" method="POST">
+                    <label for="ownerType">사용자 유형:</label>
+                    <select id="ownerType" name="ownerType" required>
+                        <option value="owner">일반 사용자</option>
+                        <option value="stationOwner">충전소 사업자</option>
+                    </select>
+                    
+                    <label for="phoneNumber">Phone Number:</label>
+                    <input type="text" id="phoneNumber" name="phoneNumber" required>
+                    
+                    <label for="address">Address:</label>
+                    <input type="text" id="address" name="address" required>
+                    
+                    <label for="licence">면허:</label>
+                    <select id="licence" name="licence" required>
+                        <option value="licence1">1종 보통</option>
+                        <option value="licence2">2종 보통</option>
+                    </select>
+
+                    <button type="submit">회원가입</button>
+                </form>
+            </section>
+        </div>
+    </div>
+    <footer class="footer">
+        <p>© 2024 EV Charging System. All rights reserved.</p>
+    </footer>
+
+</body>
+<script src="/js/sidebar.js"></script>
+
+</html>

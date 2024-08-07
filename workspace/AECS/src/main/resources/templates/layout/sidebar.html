@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sidebar</title>
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}">
+</head>
+<body>
+<!-- `th:fragment`를 사용하여 사이드바를 정의합니다 -->
+<div th:fragment="sidebar" class="sidebar">
+    <button class="toggle-button" onclick="toggleSidebar()">☰</button>
+    <div class="sidebar-container">
+        <div class="auth-buttons">
+
+            <div sec:authorize="!isAuthenticated()">
+                <a th:href="@{/inquiry/login}" >
+                    <button class="auth-button">로그인</button>
+                </a>
+            </div>
+
+            <div sec:authorize="isAuthenticated()">
+                <a href="/logout" >
+                    <button class="auth-button"> 로그아웃 </button>
+                </a>
+            </div>
+
+            <div sec:authorize="isAuthenticated()">
+                <a th:href="@{/mypage}">
+                    <button class="auth-button">마이페이지</button>
+                </a>
+            </div>
+
+
+        </div>
+        <div class="nav-buttons">
+            <a th:href="@{/home}" class="sidebar-item">HOME</a>
+            <a th:href="@{/map}" class="sidebar-item">충전하기</a>
+            <a th:href="@{/inquiry/list}" class="sidebar-item">문의</a>
+            <a href="#" class="sidebar-item">설정</a>
+        </div>
+    </div>
+    <div class="convenience">
+        <a th:href="@{/map}">- 충전하기</a>
+        <a href="#">- 차량 정보</a>
+        <a href="#">- 최근에 이용한 충전소</a>
+        <a href="#">- 이용내역</a>
+    </div>
+</div>
+<script src="/js/sidebar.js"></script>
+</body>
+</html>

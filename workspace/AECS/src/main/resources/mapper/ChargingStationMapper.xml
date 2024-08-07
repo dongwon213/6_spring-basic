@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.aecs.mapper.ChargingStationMapper">
+
+    <select id="getAllStations" resultMap="ChargingStationResultMap">
+        SELECT
+        s.STATION_ID,
+        s.STATION_ADDRESS,
+        s.STATION_PHONE_NUMBER,
+        s.STATION_NAME,
+        s.LATITUDE,
+        s.LONGITUDE,
+        c.CHARGER_ID,
+        c.CAR_CHARGING_TYPE,
+        c.CHARGER_STATUS,
+        c.CHARGER_TYPE
+        FROM TBL_CHARGING_STATION s
+        LEFT JOIN TBL_STATION_CHARGER c ON s.STATION_ID = c.STATION_ID
+    </select>
+
+    <resultMap id="ChargingStationResultMap" type="com.example.aecs.domain.vo.ChargingStationVO">
+        <id property="stationId" column="STATION_ID"/>
+        <result property="stationAddress" column="STATION_ADDRESS"/>
+        <result property="stationPhoneNumber" column="STATION_PHONE_NUMBER"/>
+        <result property="stationName" column="STATION_NAME"/>
+        <result property="latitude" column="LATITUDE"/>
+        <result property="longitude" column="LONGITUDE"/>
+        <collection property="chargers" ofType="com.example.aecs.domain.vo.ChargingStationChargerVO">
+            <id property="chargerId" column="CHARGER_ID"/>
+            <result property="stationId" column="STATION_ID"/>
+            <result property="carChargingType" column="CAR_CHARGING_TYPE"/>
+            <result property="chargerStatus" column="CHARGER_STATUS"/>
+            <result property="chargerType" column="CHARGER_TYPE"/>
+        </collection>
+    </resultMap>
+
+</mapper>

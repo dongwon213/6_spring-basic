@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>마이페이지 - EV Charging System</title>
+    <link rel="stylesheet" th:href="@{/css/mypage.css}">
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}">
+</head>
+<body>
+<div class="container">
+    <a th:href="@{/home}">
+        <header class="header">
+            <h1>EV Charging System</h1>
+        </header>
+    </a>
+
+    <div th:replace="~{/layout/sidebar :: sidebar}"></div>
+
+    <div class="main-content">
+        <input type="hidden" name="providerId" th:value="${providerId}">
+        <div class="board-title">마이페이지</div>
+
+        <div class="board-container">
+            <div class="board-header">
+                <div class="mycar-info">
+                    내 차량 정보
+                </div>
+                <div class="write-button-container">
+                    <a th:href="@{/mypage/register}" class="btn-write">
+                        <button>차량 등록</button>
+                    </a>
+                </div>
+            </div>
+
+            <div class="car-grid">
+                <div class="car-block" th:each="car : ${cars}">
+                    <div class="car-details">
+                        <div class="car-image">
+                            <img th:src="@{'/uploads/' + ${car.carImageFileName}}" alt="Car Image">
+                        </div>
+
+                        <div class="charge-type-image">
+                            <img th:src="@{'/uploads/' + ${car.carChargingType} + '.png'}" alt="Charge Type Image">
+                        </div>
+                        <div class="car-info">
+                            <div><span th:text="${car.carName}"></span></div>
+                            <div><span th:text="${car.carModel}"></span></div>
+                            <div><span th:text="${car.carChargingType}"></span></div>
+                        </div>
+                    </div>
+                    <div class="car-status">
+                        <div class="battery-status">
+                            <div class="battery-bar">
+                                <div class="battery-fill" th:style="'width: ' + ${car.currentBattery} + '%'"></div>
+                            </div>
+                            <div class="battery-percentage" th:text="${car.currentBattery + '%'}"></div>
+                        </div>
+                        <div class="charge-button-container">
+                            <button class="charge-button">충전하기</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="recent-usage">
+                <div class="recent-stations">
+                    <h3>최근에 이용한 충전소</h3>
+                    <div class="board-table">
+                        <!-- 최근에 이용한 충전소 목록 -->
+                        <div class="table-row">충전소 정보 1</div>
+                        <div class="table-row">충전소 정보 2</div>
+                    </div>
+                </div>
+                <div class="usage-history">
+                    <h3>이용 내역</h3>
+                    <div class="board-table">
+                        <!-- 이용 내역 목록 -->
+                        <div class="table-row">이용 내역 1</div>
+                        <div class="table-row">이용 내역 2</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<footer class="footer">
+    <p>© 2024 EV Charging System. All rights reserved.</p>
+</footer>
+<script src="/js/sidebar.js"></script>
+</body>
+</html>
